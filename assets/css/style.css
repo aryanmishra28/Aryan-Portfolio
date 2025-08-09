@@ -637,6 +637,15 @@ header .navbar ul li a:hover {
   }
 }
 /* education media queries ends*/
+
+/* project section starts */
+.project-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+
 /* education section ends */
 
 /* work section starts */
