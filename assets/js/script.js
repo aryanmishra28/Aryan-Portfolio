@@ -39,18 +39,50 @@ $(document).ready(function () {
 
     // <!-- emailjs to mail contact form data -->
     $("#contact-form").submit(function (event) {
+        event.preventDefault();
+        
+        // Show loading state
+        const submitBtn = $(this).find('button[type="submit"]');
+        const originalText = submitBtn.html();
+        submitBtn.html('Sending...').prop('disabled', true);
+        
+        // Initialize EmailJS
         emailjs.init("user_TTDmetQLYgWCLzHTDgqxm");
+
+        // Get form data
+        const formData = {
+            name: $('input[name="name"]').val().trim(),
+            email: $('input[name="email"]').val().trim(),
+            phone: $('input[name="phone"]').val().trim(),
+            message: $('textarea[name="message"]').val().trim()
+        };
+
+        // Validate form data
+        if (!formData.name || !formData.email || !formData.message) {
+            alert("Please fill in all required fields (Name, Email, Message)");
+            submitBtn.html(originalText).prop('disabled', false);
+            return false;
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            alert("Please enter a valid email address");
+            submitBtn.html(originalText).prop('disabled', false);
+            return false;
+        }
 
         emailjs.sendForm('contact_service', 'template_contact', '#contact-form')
             .then(function (response) {
                 console.log('SUCCESS!', response.status, response.text);
                 document.getElementById("contact-form").reset();
-                alert("Form Submitted Successfully");
+                alert("Form Submitted Successfully! I'll get back to you soon.");
+                submitBtn.html(originalText).prop('disabled', false);
             }, function (error) {
                 console.log('FAILED...', error);
-                alert("Form Submission Failed! Try Again");
+                alert("Form Submission Failed! Please try again or contact me directly at aryanmishra1851@gmail.com");
+                submitBtn.html(originalText).prop('disabled', false);
             });
-        event.preventDefault();
     });
     // <!-- emailjs to mail contact form data -->
 
